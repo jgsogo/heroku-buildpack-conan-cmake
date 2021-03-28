@@ -27,6 +27,7 @@ g++ --version | indent
 echo "-----> Install pip"
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py | indent
 python3 get-pip.py --force-reinstall | indent
+export PATH=/app/.local/bin:$PATH
 
 echo "-----> Install and configure Conan"
 python3 -m pip install conan~=1.34 | indent
