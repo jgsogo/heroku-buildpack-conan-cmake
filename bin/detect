@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# bin/detect <build-dir>
+# bin/detect <build-dir> <cache-dir>
 
 if [[ -f $1/conanfile.py  &&  -f $1/CMakeLists.txt ]] || [[ -f $1/conanfile.txt  &&  -f $1/CMakeLists.txt ]]; then
   echo "C++" && exit 0
 else
-  echo "no" && exit 1
+  exit 1
 fi
