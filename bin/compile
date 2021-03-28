@@ -23,7 +23,7 @@ python --version | indent
 cmake --version | indent
 g++ --version | indent
 
-# install conan
+# install
 echo "-----> Install pip"
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py | indent
 python3 get-pip.py --force-reinstall | indent
