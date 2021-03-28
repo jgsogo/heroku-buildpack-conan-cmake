@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+set -e
+set -o pipefail
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+
+function indent() {
+    c='s/^/       /'
+    case $(uname) in
+        Darwin) sed -l "$c";;
+        *)      sed -u "$c";;
+    esac
+}
+
+cd $BUILD_DIR
+
+# install conan
+echo "-----> Install and configure Conan"
+pip install conan | indent
+conan --version | indent
+conan config init | indent
+conan profile update settings.compiler.libcxx=libstdc++11 default | indent
+
+# install deps
+if [ -f conanfile.txt ]; then
+    echo "-----> Install dependencies"
+    conan install conanfile.txt -s build_type=Release 2>&1 | indent
+fi
+if [ -f conanfile.py ]; then
+    echo "-----> Install dependencies"
+    conan install conanfile.py -s build_type=Release 2>&1 | indent
+fi
+
+# configure
+if [ -f CMakeLists.txt ]; then
+  echo "-----> Configuring CMake"
+  cmake . 2>&1 | indent
+fi
+
+# make
+echo "-----> Compiling with CMake"
+cmake --build . --config Release 2>&1 | indent
